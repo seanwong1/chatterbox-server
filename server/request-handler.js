@@ -29,6 +29,14 @@ var requestHandler = function(request, response) {
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
+  console.log(request.url);
+
+  if (request.url === '/') {
+    request.url = '/classes/messages';
+  }
+
+  console.log(request.url);
+
   // The outgoing status.
   var statusCode = 200;
 

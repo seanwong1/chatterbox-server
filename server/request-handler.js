@@ -32,49 +32,38 @@ var requestHandler = function(request, response) {
 
   var body = [];
 
-  if (request.method === 'POST') {
+  if (request.method === 'GET') {
+    response.writeHead(200, {'Content-Type': 'application/json'});
+    response.end(JSON.stringify(body));
+  } else if (request.method = 'POST' && request.url === '/classes/messages') {
     request.on('data', (message) => {
-      console.log('m', message);
-      console.log('bm', Buffer(message));
       body.push(message);
     });
+    request.on('end', function() {
+      response.writeHead(201, {'Content-Type': 'application/json'});
+      response.write(JSON.stringify(body));
+      response.end('End of Response');
+    });
+  } else if (request.url !== '/classes/messages') {
+    response.writeHead(404, {'Content-Type': 'application/json'});
+    response.end();
   }
 
-  // if (request.url === '/classes/messages' && request.method === 'POST') {
-  //   request.on('data', (message) => {
-  //     console.log('message', message);
-  //     body.push(message);
-  //   });
-  //   //return response.end(JSON.stringify(body));
-  // }
-
-  // .request.on('GET', (message) => {
-  //   //
-  // })
-
-  // if (request.method === 'GET') {
-  //   console.log('hello');
-
-  // } else if (request.method === 'POST') {
-  //   console.log('world');
-  // }
-
-
   // The outgoing status.
-  var statusCode = 200;
+  //var statusCode = 200;
 
   // See the note below about CORS headers.
-  var headers = defaultCorsHeaders;
+  //var headers = defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'application/json';
+  //headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  //response.writeHead(statusCode, headers);
 
   // response.on()
   // response.write(data);
@@ -88,7 +77,7 @@ var requestHandler = function(request, response) {
   // node to actually send all the data over to the client.
 
   //change object that is being stringified
-  response.end(JSON.stringify(body));
+  //response.end(JSON.stringify(body));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).

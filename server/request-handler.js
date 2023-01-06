@@ -32,19 +32,29 @@ var requestHandler = function(request, response) {
 
   var body = [];
 
-  if (request.method === 'GET') {
+  var obj = {
+    username: 'Jono',
+    text: 'Do my bidding!'
+  };
+
+  var strObj = JSON.stringify(obj);
+  console.log('json', JSON.parse(strObj));
+
+  if (request.method === 'GET' && request.url === '/classes/messages') {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify(body));
   } else if (request.method = 'POST' && request.url === '/classes/messages') {
     request.on('data', (message) => {
-      body.push(message);
+      const b = Buffer.from(message);
+      body.push(b.toString());
     });
     request.on('end', function() {
       response.writeHead(201, {'Content-Type': 'application/json'});
-      response.write(JSON.stringify(body));
+      console.log('resp', JSON.parse(body));
+      response.write(body);
       response.end('End of Response');
     });
-  } else if (request.url !== '/classes/messages') {
+  } else {
     response.writeHead(404, {'Content-Type': 'application/json'});
     response.end();
   }

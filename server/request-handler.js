@@ -13,6 +13,8 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 var url = require('url');
 
+var body = [];
+
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -30,29 +32,16 @@ var requestHandler = function(request, response) {
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
-  var body = [];
-
-  var obj = {
-    username: 'Jono',
-    text: 'Do my bidding!'
-  };
-
-  var strObj = JSON.stringify(obj);
-  console.log('json', JSON.parse(strObj));
-
   if (request.method === 'GET' && request.url === '/classes/messages') {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify(body));
   } else if (request.method = 'POST' && request.url === '/classes/messages') {
     request.on('data', (message) => {
-      const b = Buffer.from(message);
-      body.push(b.toString());
+      body.push(JSON.parse(message));
     });
     request.on('end', function() {
       response.writeHead(201, {'Content-Type': 'application/json'});
-      console.log('resp', JSON.parse(body));
-      response.write(body);
-      response.end('End of Response');
+      response.end(JSON.stringify(body));
     });
   } else {
     response.writeHead(404, {'Content-Type': 'application/json'});

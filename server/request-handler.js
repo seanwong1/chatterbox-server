@@ -35,7 +35,7 @@ var requestHandler = function(request, response) {
   if (request.method === 'GET' && request.url === '/classes/messages') {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify(body));
-  } else if (request.method = 'POST' && request.url === '/classes/messages') {
+  } else if (request.method === 'POST' && request.url === '/classes/messages') {
     request.on('data', (message) => {
       body.push(JSON.parse(message));
     });
@@ -43,6 +43,9 @@ var requestHandler = function(request, response) {
       response.writeHead(201, {'Content-Type': 'application/json'});
       response.end(JSON.stringify(body));
     });
+  } else if (request.method === 'DELETE') {
+    response.writeHead(405, {'Content-Type': 'application/json'});
+    response.end();
   } else {
     response.writeHead(404, {'Content-Type': 'application/json'});
     response.end();

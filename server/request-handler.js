@@ -37,7 +37,16 @@ var requestHandler = function(request, response) {
     response.end(JSON.stringify(body));
   } else if (request.method === 'POST' && request.url === '/classes/messages') {
     request.on('data', (message) => {
-      body.push(JSON.parse(message));
+      try {
+        var parseMsg = JSON.parse(message);
+        if (parseMsg.text === '' || parseMsg.username === '') {
+          throw new Error;
+        } else {
+          body.push(parseMsg);
+        }
+      } catch (error) {
+        console.error('e', error);
+      }
     });
     request.on('end', function() {
       response.writeHead(201, {'Content-Type': 'application/json'});
@@ -52,7 +61,6 @@ var requestHandler = function(request, response) {
   }
 
   // The outgoing status.
-  //var statusCode = 200;
 
   // See the note below about CORS headers.
   //var headers = defaultCorsHeaders;

@@ -101,23 +101,38 @@ describe('Node Server Request Listener Function', function() {
     expect(res._ended).to.equal(true);
   });
 
-  it('TEMPLATE', function() {
-    var req = new stubs.request('/arglebargle', 'GET');
+  //test that tests for returning errors
+  //https://www.smashingmagazine.com/2020/08/error-handling-nodejs-error-classes/
+  it('Should not allow for posting of empty strings', function() {
+    var stubMsg = {
+      username: 'Jono',
+      text: ''
+    };
+    var req = new stubs.request('/classes/messages', 'POST', stubMsg);
     var res = new stubs.response();
 
     handler.requestHandler(req, res);
 
-    expect(res._responseCode).to.equal(404);
+    expect(res._responseCode).to.equal(201);
+    var messages = JSON.parse(res._data);
+    expect(messages.length).to.equal(2);
     expect(res._ended).to.equal(true);
   });
 
-  it('TEMPLATE', function() {
-    var req = new stubs.request('/arglebargle', 'GET');
+  //should handle head request
+  it('Should not allow user to not have username', function() {
+    var stubMsg = {
+      username: '',
+      text: 'asdf'
+    };
+    var req = new stubs.request('/classes/messages', 'POST', stubMsg);
     var res = new stubs.response();
 
     handler.requestHandler(req, res);
 
-    expect(res._responseCode).to.equal(404);
+    expect(res._responseCode).to.equal(201);
+    var messages = JSON.parse(res._data);
+    expect(messages.length).to.equal(2);
     expect(res._ended).to.equal(true);
   });
 
